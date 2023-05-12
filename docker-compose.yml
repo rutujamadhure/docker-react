@@ -1,0 +1,32 @@
+version: "3"
+services:
+  web:
+    build: 
+      # look for project files in current dir
+      context: .
+      dockerfile: Dockerfile.dev
+    ports: 
+      - "3000:3000"
+    volumes: 
+      - /app/node_modules
+      # map current dir to /app dir in container
+      - .:/app 
+  tests:
+    build: 
+      # look for project files in current dir
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes: 
+      - /app/node_modules
+      # map current dir to /app dir in container
+      - .:/app
+    # override startup command
+    command: ["npm", "run", "test"]
+
+
+  # Docker Volumes
+# Similar to port mapping. Map files from container to local machine.
+# -v $(pwd):/app -> map present working dir to /app folder in container. We are telling the container to check for the contents of the app folder in the present working directory of the host machine where our source code actually resides.
+# -v /app/node_modules -> use the node_modules folder inside the container itself rather than on the host machine.
+# Docker volumes provide a way for us to map the file system inside the container to the file system of the host machine. Basically, by bookmarking volumes we can share files between our host and the running container.
+# Now any changes to src/app.js, will be reflected on web page without rebuilding image! Changes to local filesystem ---> reaches the container 

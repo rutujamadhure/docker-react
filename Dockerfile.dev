@@ -1,0 +1,22 @@
+FROM node:16-alpine
+
+WORKDIR '/app'
+
+COPY package.json .
+RUN npm install
+# refer https://stackoverflow.com/questions/67087735/eacces-permission-denied-mkdir-usr-app-node-modules-cache-how-can-i-creat
+RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+
+COPY . .
+
+CMD ["npm", "run", "start"]
+
+# run - 'docker build -f Dockerfile.dev .'
+# delete 'node_modules' folder from current directory since it will be present in image
+# run - 'docker run -p 3000:3000 42ad85e4fa85' - dev server accessible at port 3000 of ec2 machine, use ssh port forwarding to open in browser
+# ssh ubuntu@ec2-3-237-186-136.compute-1.amazonaws.com -L localhost:4000:localhost:3000 -N
+# open in web browser on mac - http://localhost:4000/
+
+# Run tests
+# docker run -it 6b60b22a4acc npm run test - > starts new container with given image and overrides default command of 'npm run start'
+# to run test on existing container -> docker exec -it <container-id> npm run test (if this container had volume setup, then any changes to test file will be reflected in container too)

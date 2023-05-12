@@ -1,0 +1,4 @@
+npm commands - 
+    npm run test - run tests
+    npm run build - production build
+    npm run start - dev server
